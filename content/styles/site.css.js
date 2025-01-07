@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');
+export default`@import url('https://fonts.googleapis.com/css?family=Lato:400,700&display=swap');
 
 * {
     margin: 0;
@@ -219,4 +219,4 @@ body > form > label:nth-child(3) {
     text-transform: uppercase;
     background-color: lightskyblue;
     margin-bottom: 1.5rem;
-}
+}`

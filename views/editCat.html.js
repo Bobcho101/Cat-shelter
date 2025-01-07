@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+export default`<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -23,22 +23,20 @@
     </header>
     <main>
         <form action="#" method="" class="cat-form" enctype="multipart/form-data">
-            <h2>Add Cat</h2>
+            <h2>Edit Cat</h2>
             <label for="name">Name</label>
-            <input name="name" type="text" id="name">
+            <input type="text" id="name" value="Pretty Cat">
             <label for="description">Description</label>
-            <textarea name="description" id="description"></textarea>
+            <textarea id="description">Dominant and aggressive to other cats. Will probably eat you in your sleep. Very cute tho.</textarea>
             <label for="image">Image</label>
-            <input name="upload" type="file" id="image">
+            <input type="file" id="image">
             <label for="group">Breed</label>
-            <select name="breed" id="group">
+            <select id="group">
                 <option value="Fluffy Cat">Fluffy Cat</option>
-				<option value="Fluffy Cat">Fluffy Cat</option>
-				<option value="Fluffy Cat">Fluffy Cat</option>
             </select>
-            <button type="submit">Add Cat</button>
+            <button>Edit Cat</button>
         </form>
     </main>
 </body>
 
-</html>
+</html>`

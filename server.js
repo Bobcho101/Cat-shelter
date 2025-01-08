@@ -1,6 +1,5 @@
 import http from 'http';
 import fs from 'fs/promises';
-import siteCss from './content/styles/site.css.js';
 
 
 const server = http.createServer((req, res) => {
@@ -45,8 +44,13 @@ const server = http.createServer((req, res) => {
 
     if(req.url === '/content/styles/site.css'){
         res.writeHead(200, {'Content-Type': 'text/css'});
-        res.write(siteCss);
-        return res.end();
+        fs.readFile('./content/styles/site.css', {encoding: 'utf-8'})
+            .then((data) => {
+                res.write(data);
+                return res.end();
+            }).catch((error) => {
+                console.error('Error reading file:', error); 
+            });
     }
 });
 

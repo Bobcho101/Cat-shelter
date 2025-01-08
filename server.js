@@ -1,28 +1,45 @@
 import http from 'http';
+import fs from 'fs/promises';
 import siteCss from './content/styles/site.css.js';
-import homePage from './views/home/index.html.js';
-import addCatBreedPage from './views/addBreed.html.js';
-import addCatPage from './views/addCat.html.js';
-import editCatPage from './views/editCat.html.js';
+
 
 const server = http.createServer((req, res) => {
-    
     if(req.url === '/'){
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(homePage);
-        return res.end();
+        fs.readFile('./views/home/index.html', {encoding: 'utf-8'})
+            .then((data) => {
+                res.write(data);
+                return res.end();
+            }).catch((error) => {
+                console.error('Error reading file:', error); 
+            });
     } else if(req.url === '/cats/add-breed'){
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(addCatBreedPage);
-        return res.end();
+        fs.readFile('./views/addBreed.html', {encoding: 'utf-8'})
+        .then((data) => {
+            res.write(data);
+            return res.end();
+        }).catch((error) => {
+            console.error('Error reading file:', error); 
+        });
     } else if(req.url === '/cats/add-cat'){
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(addCatPage);
-        return res.end();
-    }  else if(req.url === '/cats-edit'){
+        fs.readFile('./views/addCat.html', {encoding: 'utf-8'})
+        .then((data) => {
+            res.write(data);
+            return res.end();
+        }).catch((error) => {
+            console.error('Error reading file:', error); 
+        });
+    } else if(req.url === '/cats-edit'){
         res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(editCatPage);
-        return res.end();
+        fs.readFile('./views/editCat.html', {encoding: 'utf-8'})
+        .then((data) => {
+            res.write(data);
+            return res.end();
+        }).catch((error) => {
+            console.error('Error reading file:', error); 
+        });
     }
 
 

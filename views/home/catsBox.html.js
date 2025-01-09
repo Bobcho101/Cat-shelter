@@ -7,10 +7,10 @@ export default (cat) => `<!DOCTYPE html>
 </head>
 <body>
     <li>
-        <img src="" alt="">
-        <h3></h3>
-        <p><span>Breed: </span></p>
-        <p><span>Description: </span></p>
+        <img src="${cat.image}" alt="">
+        <h3>${cat.name}</h3>
+        <p><span>Breed: </span>${cat.breed}</p>
+        <p><span>Description: </span>${cat.description}</p>
         <ul class="buttons">
             <li class="btn edit"><a href="/cats-edit">Change Info</a></li>
             <li class="btn delete"><a href="">New Home</a></li>

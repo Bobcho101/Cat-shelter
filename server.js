@@ -1,23 +1,22 @@
 import http from 'http';
 import fs from 'fs/promises';
 
+import renderHomePage from './views/home/index.html.js';
+import renderCatsBoxTemplate from './views/home/catsBox.html.js';
+
 const server = http.createServer((req, res) => {
     if(req.url === '/'){
         res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.readFile('./views/home/index.html', {encoding: 'utf-8'})
-            .then((data) => {
-                res.write(data);
+        fs.readFile('./data/cats.json', {encoding: 'utf8'})
+            .then(data => {
+                res.write(renderHomePage(JSON.parse(data)));
                 return res.end();
-            }).catch((error) => {
-                console.error('Error reading file:', error); 
-            });
-        fs.readFile('./views/home/catsBox.html', { encoding: 'utf-8' })
-            .then((template) => {
-                console.log(template);
+            })
+            .catch(err => {
+                console.log(err.message);
                 return res.end();
-            }).catch((error) => {
-                console.error('Error reading file:', error); 
-            });
+            })
+       
     } else if(req.url === '/cats/add-breed'){
         renderHtmlOrCss('./views/addBreed.html', 'text/html');
     } else if(req.url === '/cats/add-cat'){

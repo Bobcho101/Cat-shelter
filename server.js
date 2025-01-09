@@ -4,47 +4,28 @@ import fs from 'fs/promises';
 
 const server = http.createServer((req, res) => {
     if(req.url === '/'){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.readFile('./views/home/index.html', {encoding: 'utf-8'})
-            .then((data) => {
-                res.write(data);
-                return res.end();
-            }).catch((error) => {
-                console.error('Error reading file:', error); 
-            });
+        renderHtmlOrCss('./views/home/index.html', 'text/html');
     } else if(req.url === '/cats/add-breed'){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.readFile('./views/addBreed.html', {encoding: 'utf-8'})
-        .then((data) => {
-            res.write(data);
-            return res.end();
-        }).catch((error) => {
-            console.error('Error reading file:', error); 
-        });
+        renderHtmlOrCss('./views/addBreed.html', 'text/html');
     } else if(req.url === '/cats/add-cat'){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.readFile('./views/addCat.html', {encoding: 'utf-8'})
-        .then((data) => {
-            res.write(data);
+        if(req.method === 'GET'){
+            renderHtmlOrCss('./views/addCat.html', 'text/html');
+        } else if(req.method === 'POST'){
+            console.log("works");
+            
             return res.end();
-        }).catch((error) => {
-            console.error('Error reading file:', error); 
-        });
+        }
     } else if(req.url === '/cats-edit'){
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.readFile('./views/editCat.html', {encoding: 'utf-8'})
-        .then((data) => {
-            res.write(data);
-            return res.end();
-        }).catch((error) => {
-            console.error('Error reading file:', error); 
-        });
+        renderHtmlOrCss('./views/editCat.html', 'text/html');
     }
 
-
     if(req.url === '/content/styles/site.css'){
-        res.writeHead(200, {'Content-Type': 'text/css'});
-        fs.readFile('./content/styles/site.css', {encoding: 'utf-8'})
+        renderHtmlOrCss('./content/styles/site.css', 'text/css');
+    }
+
+    function renderHtmlOrCss(path, mimeType){
+        res.writeHead(200, {'Content-Type': mimeType});
+        fs.readFile(path, {encoding: 'utf-8'})
             .then((data) => {
                 res.write(data);
                 return res.end();

@@ -1,3 +1,16 @@
 [
-    
+    {
+        "uid": "1736454649202-516503",
+        "name": "Nasko",
+        "description": "A bit scared but really kind.",
+        "breed": "Fluffy Cat",
+        "image": "30342616859dfa584f329b401.png"
+    },
+    {
+        "uid": "1736454702025-990928",
+        "name": "Peshko",
+        "description": "Really chill cat.",
+        "breed": "Fluffy Cat",
+        "image": "30342616859dfa584f329b402.jpg"
+    }
 ]

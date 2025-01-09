@@ -1,5 +1,6 @@
 import catsBoxHtml from "./catsBox.html.js"
 
+
 export default (cats) =>`<!DOCTYPE html>
 <html lang="en">
 

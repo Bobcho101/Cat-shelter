@@ -11,9 +11,17 @@ const server = http.createServer((req, res) => {
         if(req.method === 'GET'){
             renderHtmlOrCss('./views/addCat.html', 'text/html');
         } else if(req.method === 'POST'){
-            console.log("works");
-            
-            return res.end();
+            let body = '';
+            req.on('data', chunk => {
+                body += chunk.toString();
+            });
+            req.on('end', () => {
+                console.log(body);
+                const data = new URLSearchParams(body);
+                console.log(data);
+                res.end();
+            });
+            return;
         }
     } else if(req.url === '/cats-edit'){
         renderHtmlOrCss('./views/editCat.html', 'text/html');

@@ -1,10 +1,23 @@
 import http from 'http';
 import fs from 'fs/promises';
 
-
 const server = http.createServer((req, res) => {
     if(req.url === '/'){
-        renderHtmlOrCss('./views/home/index.html', 'text/html');
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        fs.readFile('./views/home/index.html', {encoding: 'utf-8'})
+            .then((data) => {
+                res.write(data);
+                return res.end();
+            }).catch((error) => {
+                console.error('Error reading file:', error); 
+            });
+        fs.readFile('./views/home/catsBox.html', { encoding: 'utf-8' })
+            .then((template) => {
+                console.log(template);
+                return res.end();
+            }).catch((error) => {
+                console.error('Error reading file:', error); 
+            });
     } else if(req.url === '/cats/add-breed'){
         renderHtmlOrCss('./views/addBreed.html', 'text/html');
     } else if(req.url === '/cats/add-cat'){
@@ -16,9 +29,8 @@ const server = http.createServer((req, res) => {
                 body += chunk.toString();
             });
             req.on('end', () => {
-                console.log(body);
                 const data = new URLSearchParams(body);
-                console.log(data);
+                const newCat = Object.fromEntries(data)
                 res.end();
             });
             return;

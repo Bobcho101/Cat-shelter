@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Fon4o tarikata",
+        "description": "very good cat",
+        "breed": "British",
+        "image": "https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_2x1.jpg"
+    },
+    {
+        "name": "Banancho",
+        "description": "very bad cat",
+        "breed": "Orange cat",
+        "image": "https://www.dailypaws.com/thmb/D4RelXrMDy3y5TaBPBhxQ2Wl-Wg=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/orange-abyssinian-1223658583-447903ecfcb742f9a6e969a16f7ead6b.jpg"
+    },
+    {
+        "name": "Gab",
+        "description": "fat cat",
+        "breed": "British",
+        "image": "https://t4.ftcdn.net/jpg/05/80/61/41/360_F_580614175_LW6mydM9ii6KEwPjF8aAlPqmlj21YKiC.jpg"
+    }
+]

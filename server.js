@@ -1,5 +1,7 @@
 import http from 'http';
 import fs from 'fs/promises';
+import formidable from 'formidable';
+import path from 'path';
 
 import renderHomePage from './views/home/index.html.js';
 import renderCatsBoxTemplate from './views/home/catsBox.html.js';
@@ -23,36 +25,68 @@ const server = http.createServer((req, res) => {
         if(req.method === 'GET'){
             renderHtmlOrCss('./views/addCat.html', 'text/html');
         } else if(req.method === 'POST'){
-            let body = '';
-            req.on('data', chunk => {
-                body += chunk.toString();
+            const form = formidable({
+                multiples: false,
+                uploadDir: './data/uploads',
+                keepExtensions: true
             });
-            req.on('end', () => {
-                const data = new URLSearchParams(body);
-                const newCat = Object.fromEntries(data);
-                const uid = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
-                const newCatData = {
-                    uid,
-                    name: newCat.name,
-                    description: newCat.description,
-                    image:  newCat.upload,
-                    breed: newCat.breed
-                };
-
-                fs.readFile('./data/cats.json', { encoding: 'utf8'})
-                    .then((catsData) => {
-                        const cats = JSON.parse(catsData);
-                        cats.push(newCatData);
-                        console.log(cats);
-                        fs.writeFile('./data/cats.json', JSON.stringify(cats, null, 4))
+            form.parse(req, (err, fields, files) => {
+                // const path = fs.copyFile(files['upload'].filepath);
+                // console.log(path);
+                // console.log(files['upload'][0]);
+                // fs.copyFile(files['upload'].filepath, )  
+                   
+                const newFileName = files['upload'][0].newFilename;
+                console.log(newFileName);
+                const name = Object.entries(fields)[0][1][0];
+                const description = Object.entries(fields)[1][1][0];
+                const breed = Object.entries(fields)[2][1][0];
+                
+                fs.readFile(`./data/uploads/${newFileName}`, {encoding: 'utf8'})
+                    .then(photo => {
+                        
                         return res.end();
                     })
-                    .catch(err => {
-                        console.log(err.message)
+                    .catch((err) => {
+                        console.log(err.message);
                         return res.end();
-                    });
+                    })
             });
-            return;
+
+            // let body = '';
+            // req.on('data', chunk => {
+            //     body += chunk.toString();
+            // });
+            // req.on('end', () => {
+            //     const data = new URLSearchParams(body);
+            //     const newCat = Object.fromEntries(data);
+            //     const image = newCat.image;
+
+            //     console.log(image);
+
+            //     const uid = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+            //     const newCatData = {
+            //         uid,
+            //         name: newCat.name,
+            //         description: newCat.description,
+            //         image:  newCat.upload,
+            //         breed: newCat.breed
+            //     };
+
+            //     fs.readFile('./data/cats.json', { encoding: 'utf8'})
+            //         .then((catsData) => {
+            //             const cats = JSON.parse(catsData);
+            //             cats.push(newCatData);
+            //             console.log(cats);
+            //             fs.writeFile('./data/cats.json', JSON.stringify(cats, null, 4))
+            //             return res.end();
+            //         })
+            //         .catch(err => {
+            //             console.log(err.message)
+            //             return res.end();
+            //         });
+            // });
+            // return;
         }
     } else if(req.url === '/cats-edit'){
         renderHtmlOrCss('./views/editCat.html', 'text/html');

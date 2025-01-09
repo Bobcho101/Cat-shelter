@@ -29,8 +29,28 @@ const server = http.createServer((req, res) => {
             });
             req.on('end', () => {
                 const data = new URLSearchParams(body);
-                const newCat = Object.fromEntries(data)
-                res.end();
+                const newCat = Object.fromEntries(data);
+                const uid = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+                const newCatData = {
+                    uid,
+                    name: newCat.name,
+                    description: newCat.description,
+                    image:  newCat.upload,
+                    breed: newCat.breed
+                };
+
+                fs.readFile('./data/cats.json', { encoding: 'utf8'})
+                    .then((catsData) => {
+                        const cats = JSON.parse(catsData);
+                        cats.push(newCatData);
+                        console.log(cats);
+                        fs.writeFile('./data/cats.json', JSON.stringify(cats, null, 4))
+                        return res.end();
+                    })
+                    .catch(err => {
+                        console.log(err.message)
+                        return res.end();
+                    });
             });
             return;
         }

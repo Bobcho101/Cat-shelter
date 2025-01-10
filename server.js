@@ -7,6 +7,7 @@ import renderHomePage from './views/home/index.html.js';
 import renderAddCat from './views/addCat.html.js';
 import renderEditCat from './views/editCat.html.js';
 
+
 const server = http.createServer((req, res) => {
     if(req.url === '/'){
         res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -115,22 +116,26 @@ const server = http.createServer((req, res) => {
             });
         }
     } else if(req.url.startsWith('/cats-edit/')){
-        res.writeHead(200, {'content-type': 'text/html'});
-        res.write(renderEditCat());
-        const currentCatUid = req.url.split('/cats-edit/')[1];
-        
-        fs.readFile('./data/cats.json', { encoding: 'utf8' })
-            .then(data => {
-                const cats = JSON.parse(data);
-                const cat = cats.find(c => c.uid === currentCatUid);
-                console.log(cat);
-                
-                return res.end(); 
-            })
-            .catch(err => {
-                console.error('Error reading cats data:', err);
-                return res.end(); 
-            });
+        if(req.method === 'GET'){
+            res.writeHead(200, {'content-type': 'text/html'});
+            const currentCatUid = req.url.split('/cats-edit/')[1];
+            
+            fs.readFile('./data/cats.json', { encoding: 'utf8' })
+                .then(data => {
+                    const cats = JSON.parse(data);
+                    const cat = cats.find(c => c.uid === currentCatUid);
+                    console.log(cat);
+                    res.write(renderEditCat(cat));
+                    return res.end(); 
+                })
+                .catch(err => {
+                    console.error('Error reading cats data:', err);
+                    return res.end(); 
+                });
+        } else if(req.method === 'PUT'){
+            
+        }
+       
 
     } 
 

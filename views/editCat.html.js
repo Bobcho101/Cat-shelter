@@ -1,5 +1,10 @@
-export default function renderEditCat(){
-return`<!DOCTYPE html>
+import fs from 'fs';
+
+export default function renderEditCat(cat){
+    let options = fs.readFileSync(`${process.cwd()}/data/breeds.json`, {encoding: 'utf8'});
+    options = JSON.parse(options);
+
+    return`<!DOCTYPE html>
     <html lang="en">
 
     <head>
@@ -26,18 +31,22 @@ return`<!DOCTYPE html>
             <form action="" method="put" class="cat-form" enctype="multipart/form-data">
                 <h2>Edit Cat</h2>
                 <label for="name">Name</label>
-                <input type="text" id="name" value="Pretty Cat">
+                <input type="text" id="name" value="${cat.name}">
                 <label for="description">Description</label>
-                <textarea id="description">Dominant and aggressive to other cats. Will probably eat you in your sleep. Very cute tho.</textarea>
+                <textarea id="description">${cat.description}</textarea>
                 <label for="image">Image</label>
                 <input type="file" id="image">
                 <label for="group">Breed</label>
-                <select id="group">
-                    <option value="Fluffy Cat">Fluffy Cat</option>
-                </select>
-                <button>Edit Cat</button>
-            </form>
-        </main>
-    </body>
-    </html>`
+                    <select id="group">
+                         ${
+                            options.length > 0
+                            ? options.map(option => `<option value="${option}">${option}</option>`)
+                            : `<option value="">No breeds</option>`
+                        }
+                    </select>
+                    <button>Edit Cat</button>
+                </form>
+            </main>
+        </body>
+        </html>`
 }

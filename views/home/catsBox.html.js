@@ -1,14 +1,12 @@
 import fs, { readFileSync } from 'fs';
 
 export default (cat) => {
-//   try {
     const imagePath = `${process.cwd()}/data/uploads/${cat.image}`;
 
     const imageBuffer = readFileSync(imagePath)
 
     const imageBase64 = `data:image/png;base64,${imageBuffer.toString('base64')}`;
     
-    // const html = 
     return `<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -23,14 +21,10 @@ export default (cat) => {
             <p><span>Breed: </span>${cat.breed}</p>
             <p><span>Description: </span>${cat.description}</p>
             <ul class="buttons">
-                <li class="btn edit"><a href="/cats-edit">Change Info</a></li>
-                <li class="btn delete"><a href="">New Home</a></li>
+                <li class="btn edit"><a href="/cats-edit/${cat.uid}">Change Info</a></li>
+                <li class="btn delete"><a href="/details/${cat.uid}">New Home</a></li>
             </ul>
         </li>
     </body>
     </html>`;
-//   } catch (err) {
-//     console.error("Error processing request:", err.message);
-//     return `<p>Error loading image for ${cat.name}: ${err.message}</p>`;
-//   }
 };

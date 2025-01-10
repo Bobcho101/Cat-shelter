@@ -38,11 +38,14 @@ const server = http.createServer((req, res) => {
                          
                         return fs.writeFile('./data/breeds.json', JSON.stringify(breeds));
                     })
+                    .then(() => {
+                        res.writeHead(302, { Location: '/' });
+                        return res.end();
+                    })
                     .catch(err => {
                         console.log(err.message);
                         return res.end();
                     })
-                res.end();
             })
         }
         

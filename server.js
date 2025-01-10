@@ -4,7 +4,7 @@ import formidable from 'formidable';
 import path from 'path';
 
 import renderHomePage from './views/home/index.html.js';
-import { JsxEmit } from 'typescript';
+import renderAddCat from './views/addCat.html.js';
 
 const server = http.createServer((req, res) => {
     if(req.url === '/'){
@@ -67,7 +67,9 @@ const server = http.createServer((req, res) => {
         
     } else if(req.url === '/cats/add-cat'){
         if(req.method === 'GET'){
-            renderHtmlOrCss('./views/addCat.html', 'text/html');
+            res.writeHead(200, {'content-type': 'text/html'});
+            res.write(renderAddCat());
+            return res.end();
         } else if(req.method === 'POST'){
             const form = formidable({
                 multiples: false,

@@ -5,6 +5,7 @@ import path from 'path';
 
 import renderHomePage from './views/home/index.html.js';
 import renderAddCat from './views/addCat.html.js';
+import renderEditCat from './views/editCat.html.js';
 
 const server = http.createServer((req, res) => {
     if(req.url === '/'){
@@ -113,9 +114,26 @@ const server = http.createServer((req, res) => {
                     });        
             });
         }
-    } else if(req.url === '/cats-edit'){
-        renderHtmlOrCss('./views/editCat.html', 'text/html');
-    }
+    } else if(req.url.startsWith('/cats-edit/')){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(renderEditCat());
+        const currentCatUid = req.url.split('/cats-edit/')[1];
+        
+        fs.readFile('./data/cats.json', { encoding: 'utf8' })
+            .then(data => {
+                const cats = JSON.parse(data);
+                const cat = cats.find(c => c.currentCatUid === currentCatUid);
+                console.log(cat);
+                
+                return res.end(); 
+            })
+            .catch(err => {
+                console.error('Error reading cats data:', err);
+                return res.end(); 
+            });
+        }
+
+    } 
 
     if(req.url === '/content/styles/site.css'){
         renderHtmlOrCss('./content/styles/site.css', 'text/css');

@@ -2,7 +2,6 @@ import fs from 'fs';
 export default function renderAddCat(){
     let options = fs.readFileSync(`${process.cwd()}/data/breeds.json`, {encoding: 'utf8'});
     options = JSON.parse(options);
-    console.log(options);
     return `<!DOCTYPE html>
         <html lang="en">
 
@@ -38,7 +37,9 @@ export default function renderAddCat(){
                     <label for="group">Breed</label>
                     <select name="breed" id="group">
                         ${
-                            options.map(option => `<option value="${option}">${option}</option>`)
+                            options.length > 0
+                            ? options.map(option => `<option value="${option}">${option}</option>`)
+                            : `<option value="">No breeds</option>`
                         }
                     </select>
                     <button type="submit">Add Cat</button>

@@ -37,14 +37,14 @@ export default function renderEditCat(cat){
                 <label for="image">Image</label>
                 <input name="image" type="file" id="image">
                 <label for="group">Breed</label>
-                    <select name="breed" id="group" required>    
-                         ${
-                            options.length > 0
-                            ? options.map(option => `<option value="${option}">${option}</option>`)
-                            : `<option value="">No breeds</option>`
-                         }
-                    </select>
-                    <button type="submit">Edit Cat</button>
+                <select name="breed" id="group" required>    
+                        ${
+                        options.length > 0
+                        ? options.map(option => `<option value="${option}">${option}</option>`)
+                        : `<option value="">No breeds</option>`
+                        }
+                </select>
+                <button type="submit">Edit Cat</button>
                 </form>
             </main>
         </body>

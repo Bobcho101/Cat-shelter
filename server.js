@@ -1,7 +1,7 @@
 import http from 'http';
 import fs from 'fs/promises';
 import formidable from 'formidable';
-import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 import renderHomePage from './views/home/index.html.js';
 import renderAddCat from './views/addCat.html.js';
@@ -132,30 +132,86 @@ const server = http.createServer((req, res) => {
                     return res.end(); 
                 });
         } else if(req.method === 'POST'){
-            const currentCatUid = req.url.split('/cats-edit/')[1];
-            const form = formidable({
-                multiples: false,
-                keepExtensions: true});
-            form.parse(req, (err, fields, files) => {
-                const name = fields['name'][0];
-                const description = fields['description'][0];
-                const breed = fields['breed'][0];
-                const image = files['image'][0].newFilename;
-                fs.readFile('./data/cats.json', { encoding: 'utf8' })
-                .then(data => {
-                    const cats = JSON.parse(data);
-                    const cat = cats.find(c => c.uid === currentCatUid);
-                    
-                    return res.end(); 
-                })
-                .catch(err => {
-                    console.log(err.message)
-                    return res.end(); 
-                });
+            let body = [];
+            req.on('data', chunk => {
+                body.push(chunk);
+            });
+            req.on('end', () => {
+                const dataBuffer = Buffer.concat(body);
+
+                const data = dataBuffer.toString('binary');
+                // console.log(data);
                 
+                const boundary = req.headers['content-type'].split('boundary=').at(1);
+                
+                let parts = data.split(`--${boundary}`).map(part => part.trim()).filter(part => part && part !== '--');
+
+                const name = parts[0].split('\r\n').slice(1).join('\r\n').trim();
+                const description = parts[1].split('\r\n').slice(1).join('\r\n').trim();
+                const breed = parts[3].split('\r\n').slice(1).join('\r\n').trim();
+
+
+
+                const imagePart = parts[2];
+                const imageHeaders = imagePart.split('\r\n\r\n')[0]; 
+                const imageContent = imagePart.split('\r\n\r\n')[1];
+
+                const uniqueFilename = uuidv4() + '.png';
+                const currentCatUid = req.url.split('/cats-edit/')[1];
+                fs.readFile('./data/cats.json', { encoding: 'utf8' })
+                    .then(data => {
+                        const cats = JSON.parse(data);
+                        const catIndex = cats.findIndex(c => c.uid === currentCatUid);
+                        cats[catIndex].image = uniqueFilename;
+                        cats[catIndex].name = name;        
+                        cats[catIndex].description = description;  
+                        cats[catIndex].breed = breed; 
+                        
+                        fs.writeFile('./data/cats.json', JSON.stringify(cats, null, 4),{encoding: 'utf8'})
+                        fs.writeFile(`${process.cwd()}/data/uploads`, imageContent, 'binary');
+                        
+                        return res.end()            ; 
+                    })
+                    .catch(err => {
+                        console.log(err.message)
+                        return res.end(); 
+                    });
+
+
+            
+                // fs.writeFile(`./data/uploads`)
                 
                 return res.end();
-            });
+            })
+
+            
+            // const currentCatUid = req.url.split('/cats-edit/')[1];
+            // const form = formidable({
+            //     multiples: false,
+            //     keepExtensions: true});
+            // form.parse(req, (err, fields, files) => {
+                // const name = fields['name'][0];
+                // const description = fields['description'][0];
+                // const breed = fields['breed'][0];
+                // const image = files['image'][0].newFilename;
+             
+                
+                // fs.readFile('./data/cats.json', { encoding: 'utf8' })
+                // .then(data => {
+                //     const cats = JSON.parse(data);
+                //     const cat = cats.find(c => c.uid === currentCatUid);
+                //     // console.log(cats[cat]);
+                    
+                //     return res.end(); 
+                // })
+                // .catch(err => {
+                //     console.log(err.message)
+                //     return res.end(); 
+                // });
+                
+                
+            //     return res.end();
+            // });
         }
        
 

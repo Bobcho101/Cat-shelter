@@ -179,7 +179,9 @@ const server = http.createServer((req, res) => {
                 return res.end();
             })
         }
-    } 
+    } else if(req.url.startsWith('/details/')){
+        return res.end();
+    }
 
     if(req.url === '/content/styles/site.css'){
         renderHtmlOrCss('./content/styles/site.css', 'text/css');

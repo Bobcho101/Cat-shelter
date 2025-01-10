@@ -122,7 +122,7 @@ const server = http.createServer((req, res) => {
         fs.readFile('./data/cats.json', { encoding: 'utf8' })
             .then(data => {
                 const cats = JSON.parse(data);
-                const cat = cats.find(c => c.currentCatUid === currentCatUid);
+                const cat = cats.find(c => c.uid === currentCatUid);
                 console.log(cat);
                 
                 return res.end(); 
@@ -131,7 +131,6 @@ const server = http.createServer((req, res) => {
                 console.error('Error reading cats data:', err);
                 return res.end(); 
             });
-        }
 
     } 
 

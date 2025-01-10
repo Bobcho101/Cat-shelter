@@ -34,6 +34,22 @@ const server = http.createServer((req, res) => {
                 fs.readFile('./data/breeds.json', {encoding: 'utf-8'})
                     .then(data => {
                         const breeds = JSON.parse(data);
+                        if(breeds.includes(newBreed)){
+                            res.writeHead(403, {'Content-Type': 'text/html'});
+                            res.write(`<!DOCTYPE html>
+                                    <html lang="en">
+                                    <head>
+                                        <meta charset="UTF-8">
+                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                        <title>Document</title>
+                                    </head>
+                                    <body>
+                                        <h1>This breed already exists!</h1>
+                                        <a href="/"><button>Go back to home page</button></a>
+                                    </body>
+                                    </html>`);
+                            return res.end();
+                        }
                         breeds.push(newBreed);
                          
                         return fs.writeFile('./data/breeds.json', JSON.stringify(breeds));

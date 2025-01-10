@@ -4,6 +4,7 @@ import formidable from 'formidable';
 import path from 'path';
 
 import renderHomePage from './views/home/index.html.js';
+import { JsxEmit } from 'typescript';
 
 const server = http.createServer((req, res) => {
     if(req.url === '/'){
@@ -19,7 +20,32 @@ const server = http.createServer((req, res) => {
             })
        
     } else if(req.url === '/cats/add-breed'){
-        renderHtmlOrCss('./views/addBreed.html', 'text/html');
+        if(req.method === 'GET'){
+            renderHtmlOrCss('./views/addBreed.html', 'text/html');
+        } else if(req.method === 'POST'){
+            let body = '';
+            req.on('data', chunk => {
+                body += chunk.toString();
+            });
+            
+            
+            req.on('end', () => {
+                const newBreed = body.split('=')[1];
+                fs.readFile('./data/breeds.json', {encoding: 'utf-8'})
+                    .then(data => {
+                        const breeds = JSON.parse(data);
+                        breeds.push(newBreed);
+                         
+                        return fs.writeFile('./data/breeds.json', JSON.stringify(breeds));
+                    })
+                    .catch(err => {
+                        console.log(err.message);
+                        return res.end();
+                    })
+                res.end();
+            })
+        }
+        
     } else if(req.url === '/cats/add-cat'){
         if(req.method === 'GET'){
             renderHtmlOrCss('./views/addCat.html', 'text/html');
@@ -63,55 +89,7 @@ const server = http.createServer((req, res) => {
                         console.error('Error handling files:', err);
                         res.writeHead(500, { 'Content-Type': 'text/plain' });
                         res.end('Error saving data');
-                    });
-                // const path = fs.copyFile(files['upload'].filepath);
-                // console.log(path);
-                // console.log(files['upload'][0]);
-                // fs.copyFile(files['upload'].filepath, )  
-                
-                // try{
-                //     const newFileName = files['upload'][0].newFilename;
-                //     // console.log(newFileName);
-                //     const name = Object.entries(fields)[0][1][0];
-                //     const description = Object.entries(fields)[1][1][0];
-                //     const breed = Object.entries(fields)[2][1][0];
-                    
-                //     fs.readFile(`./data/uploads/${newFileName}`, {encoding: 'utf8'})
-                //         .then(photo => {
-                //             image = photo;
-                //         })
-                //         .catch((err) => {
-                //             console.log(err.message);
-                //             return res.end();
-                //         })
-                //     fs.readFile('./data/cats.json', {encoding: 'utf8'})
-                //         .then(data => {
-                //             catsData = data;
-                            
-                //         }).catch(err => {
-                //             console.log(err.message);
-                //             return res.end();
-                //         })
-                   
-                //     console.log(catsData);
-                //     const cats = JSON.parse(catsData);
-                //     const uid = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
-                //     const newCatData = {
-                //         uid,
-                //         name,
-                //         description,
-                //         breed,
-                //         image
-                //     };
-                //     cats.push(newCatData);
-                    
-                //     fs.writeFile('./data/cats.json', JSON.stringify(cats, null, 4));
-                //     return res.end();
-                // } catch(err){
-                //     console.log(err.message);
-                //     return res.end();
-                // }
-               
+                    });        
             });
         }
     } else if(req.url === '/cats-edit'){

@@ -124,16 +124,38 @@ const server = http.createServer((req, res) => {
                 .then(data => {
                     const cats = JSON.parse(data);
                     const cat = cats.find(c => c.uid === currentCatUid);
-                    console.log(cat);
                     res.write(renderEditCat(cat));
                     return res.end(); 
                 })
                 .catch(err => {
-                    console.error('Error reading cats data:', err);
+                    console.log(err.message)
                     return res.end(); 
                 });
-        } else if(req.method === 'PUT'){
-            
+        } else if(req.method === 'POST'){
+            const currentCatUid = req.url.split('/cats-edit/')[1];
+            const form = formidable({
+                multiples: false,
+                keepExtensions: true});
+            form.parse(req, (err, fields, files) => {
+                const name = fields['name'][0];
+                const description = fields['description'][0];
+                const breed = fields['breed'][0];
+                const image = files['image'][0].newFilename;
+                fs.readFile('./data/cats.json', { encoding: 'utf8' })
+                .then(data => {
+                    const cats = JSON.parse(data);
+                    const cat = cats.find(c => c.uid === currentCatUid);
+                    
+                    return res.end(); 
+                })
+                .catch(err => {
+                    console.log(err.message)
+                    return res.end(); 
+                });
+                
+                
+                return res.end();
+            });
         }
        
 

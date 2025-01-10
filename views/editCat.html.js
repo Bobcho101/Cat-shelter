@@ -28,23 +28,23 @@ export default function renderEditCat(cat){
             <h1>Cat Shelter</h1>
         </header>
         <main>
-            <form action="" method="put" class="cat-form" enctype="multipart/form-data">
+            <form action="" method="post" class="cat-form" enctype="multipart/form-data">
                 <h2>Edit Cat</h2>
                 <label for="name">Name</label>
-                <input type="text" id="name" value="${cat.name}">
+                <input name="name" type="text" id="name" value="${cat.name}">
                 <label for="description">Description</label>
-                <textarea id="description">${cat.description}</textarea>
+                <textarea name="description" id="description">${cat.description}</textarea>
                 <label for="image">Image</label>
-                <input type="file" id="image">
+                <input name="image" type="file" id="image">
                 <label for="group">Breed</label>
-                    <select id="group">
+                    <select name="breed" id="group" required>    
                          ${
                             options.length > 0
                             ? options.map(option => `<option value="${option}">${option}</option>`)
                             : `<option value="">No breeds</option>`
-                        }
+                         }
                     </select>
-                    <button>Edit Cat</button>
+                    <button type="submit">Edit Cat</button>
                 </form>
             </main>
         </body>

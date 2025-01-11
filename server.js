@@ -150,8 +150,6 @@ const server = http.createServer((req, res) => {
                 const description = parts[1].split('\r\n').slice(1).join('\r\n').trim();
                 const breed = parts[3].split('\r\n').slice(1).join('\r\n').trim();
 
-
-
                 const imagePart = parts[2];
                 const imageHeaders = imagePart.split('\r\n\r\n')[0]; 
                 const imageContent = imagePart.split('\r\n\r\n')[1];

@@ -200,10 +200,11 @@ const server = http.createServer((req, res) => {
             .then(data => {
                 data = JSON.parse(data);
                 const catIndex = data.findIndex(c => c.uid === currentCatUid);
-                const newData = data.splice(currentCatUid, 1);
-                console.log(newData);
+                const deletedData = data.splice(catIndex, 1);
                 
-                
+                return fs.writeFile('./data/cats.json', JSON.stringify(data, null, 4));
+            }).then(() => {
+                res.writeHead(302, { Location: '/' });
                 return res.end();
             })
             .catch(err => {
@@ -211,7 +212,6 @@ const server = http.createServer((req, res) => {
                 return res.end();
             })
         }
-        
     }
 
     if(req.url.startsWith('/content/')){

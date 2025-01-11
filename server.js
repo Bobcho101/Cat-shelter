@@ -7,7 +7,6 @@ import renderHomePage from './views/home/index.html.js';
 import renderAddCat from './views/addCat.html.js';
 import renderEditCat from './views/editCat.html.js';
 import renderCatDetails from './views/catShelter.html.js';
-import { JsxEmit } from 'typescript';
 
 
 const server = http.createServer((req, res) => {
@@ -142,7 +141,6 @@ const server = http.createServer((req, res) => {
                 const dataBuffer = Buffer.concat(body);
 
                 const data = dataBuffer.toString('binary');
-                // console.log(data);
                 
                 const boundary = req.headers['content-type'].split('boundary=').at(1);
                 
@@ -182,19 +180,38 @@ const server = http.createServer((req, res) => {
             })
         }
     } else if(req.url.startsWith('/details/')){
-        res.writeHead(200, {'content-type': 'text/html'});
-        fs.readFile('./data/cats.json')
+        if(req.method === 'GET'){
+            res.writeHead(200, {'content-type': 'text/html'});
+            fs.readFile('./data/cats.json')
+                .then(data => {
+                    data = JSON.parse(data);
+                    const currentCatUid = req.url.split('/details/')[1];
+                    const cat = data.find(c => c.uid === currentCatUid);
+                    res.write(renderCatDetails(cat));
+                    return res.end();
+                })
+                .catch(err => {
+                    console.log(err.message);
+                    return res.end();
+                })
+        } else if(req.method === 'POST'){
+            const currentCatUid = req.url.split('/details/')[1];         
+            fs.readFile('./data/cats.json', {encoding: 'utf8'})
             .then(data => {
                 data = JSON.parse(data);
-                const currentCatUid = req.url.split('/details/')[1];
-                const cat = data.find(c => c.uid === currentCatUid);
-                res.write(renderCatDetails(cat));
+                const catIndex = data.findIndex(c => c.uid === currentCatUid);
+                const newData = data.splice(currentCatUid, 1);
+                console.log(newData);
+                
+                
                 return res.end();
             })
             .catch(err => {
                 console.log(err.message);
                 return res.end();
             })
+        }
+        
     }
 
     if(req.url.startsWith('/content/')){

@@ -5,6 +5,7 @@ export default function renderCatDetails(cat){
     const imageBuffer = fs.readFileSync(imagePath)
     const imageBase64 = `data:image/png;base64,${imageBuffer.toString('base64')}`;
     
+    
     return `<!DOCTYPE html>
     <html lang="en">
 
